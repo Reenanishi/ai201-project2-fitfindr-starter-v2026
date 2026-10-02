@@ -39,6 +39,8 @@
 
 ## What This Does
 
+The user tells FitFinr what kind of clothing item they are looking for, FitFindr search the available items listings to find a matching item. Once an item is found, it will suggest using the user's wardrobe. Finally, it will create a short fit card for the items with a description of the outfit.
+
 <!-- Three or four sentences: what a user asks for, and what they get back. -->
 
 

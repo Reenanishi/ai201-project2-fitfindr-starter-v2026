@@ -25,9 +25,14 @@ Given a query that matches at least one listing, the agent completes all three
 tool calls and returns a fit card — in at least 4 of 5 tries.
 
 **Why this target:**
+
+I picked 4 of 5 because the search uses keyword matching, so sometimes it may not find the right item if the query uses different words.
+
 <!-- Why 4 of 5 and not 5 of 5? Something about your search, probably —
      "my search is a plain keyword match and some phrasings will miss" is a
      real answer. -->
+
+
 
 ---
 
@@ -37,12 +42,18 @@ Given a query that matches no listings, the agent stops before calling
 `suggest_outfit` and returns a message naming what to change — 5 of 5 tries.
 
 **Why this target:**
+I picked 5 of 5 because if no item is found, the agent should always stop. There is no item to pass to `suggest_outfit`.
+
 <!-- Why is 5 of 5 reasonable here when criterion 1 isn't? What's different
      about this path? -->
 
+
+
 ---
 
-## 3. Something about state
+## 3. The selected item should match
+
+Given a query that matches at least one listing, the item saved in `session["selected_item"]` should have the same ID as the item passed to `suggest_outfit` — 5 of 5 tries.
 
 <!-- YOU WRITE THIS ONE.
 
@@ -58,11 +69,15 @@ Given a query that matches no listings, the agent stops before calling
 
 **Why this target:**
 
+ I chose 5 of 5 because the selected item should stay the same when it is passed to `suggest_outfit`. If the IDs do not match, then the wrong item is being passed to the next tool.
 
 
 ---
 
-## 4. Something about the fit card
+<!-- ## 4. Something about the fit card -->
+## 4. The fit card should include details about items.
+
+Given a successful outfit, the fit card should include the item's price, size, and platform - 4 of 5 tries.
 
 <!-- YOU WRITE THIS ONE.
 
@@ -78,12 +93,14 @@ Given a query that matches no listings, the agent stops before calling
 
 
 **Why this target:**
-
+I chose 4 of 5 because the model may give a different answer each time. I still want the important item details to be included most of the time.
 
 
 ---
 
-## 5. Your choice
+## 5. The search should stay within the price.
+
+Given a maximum price, all the items found should be the same price or lower - 5 of 5 tries.
 
 <!-- YOU WRITE THIS ONE TOO.
 
@@ -93,8 +110,8 @@ Given a query that matches no listings, the agent stops before calling
      or an observable outcome. -->
 
 
-
 **Why this target:**
+I chose 5 of 5 because the search should always follow the price the user gives. I don't want it to show items with a higher price.
 
 
 

@@ -39,7 +39,7 @@
 
 ## What This Does
 
-The user tells FitFinr what kind of clothing item they are looking for, FitFindr search the available items listings to find a matching item. Once an item is found, it will suggest using the user's wardrobe. Finally, it will create a short fit card for the items with a description of the outfit.
+The user tells FitFindr what kind of clothing item they are looking for, FitFindr search the available items listings to find a matching item. Once an item is found, it will suggest using the user's wardrobe. Finally, it will create a short fit card for the items with a description of the outfit.
 
 <!-- Three or four sentences: what a user asks for, and what they get back. -->
 
@@ -61,28 +61,39 @@ The user tells FitFinr what kind of clothing item they are looking for, FitFindr
 
 ### `search_listings`
 
-- **What it does:**
-- **Inputs:** <!-- name and type each: `max_price` (float), not "a price" -->
-- **Returns:**
-- **When it has nothing:**
+- **What it does:**  It searches the available listings and finds items that matche with what the user is looking for.
+
+- **Inputs:** <!-- name and type each: `max_price` (float), not "a price" --> `description` (str), `size` (str or None), `max_price` (float or None)
+
+- **Returns:** A list of listing dictionaries, each with details like `title`, `price`, `size`, and `platform`, with the best matches first.
+
+- **When it has nothing:** Returns an empty list `[]` when no listings match with the user's search.
 
 ### `suggest_outfit`
 
-- **What it does:**
-- **Inputs:**
-- **Returns:**
-- **When it has nothing:**
+- **What it does:** It suggests an outfit using the item found from the search and items from the user's wardrobe.
+
+- **Inputs:** `new_item` (dict), `wardrobe` (dict)
+
+- **Returns:** A non-empty string with an outfit suggestion.
+
+- **When it has nothing:** If the wardrobe is empty, it should return general styling advice for the new item.
 
 ### `create_fit_card`
 
-- **What it does:**
-- **Inputs:**
-- **Returns:**
-- **When it has nothing:**
+- **What it does:** It creates a short caption for the outfit and the new item.
+
+- **Inputs:** `outfit` (str), `new_item` (dict)
+
+- **Returns:** A 2–4 sentence fit card that describes the outfit and the new item.
+
+- **When it has nothing:** If the outfit is empty, it returns a message explaining that there is no outfit to create a fit card for.
 
 ---
 
 ## Planning Loop
+**Branch rule:** If `search_listings` returns an empty list, put a message in the session and stop. Otherwise, take the first result and go to `suggest_outfit`.
+**Where it lives:** `agent.py::run_agent`
 
 <!-- Your branch rule, stated as a rule — the condition AND both paths — plus
      the file and function that holds it.
@@ -95,9 +106,9 @@ The user tells FitFinr what kind of clothing item they are looking for, FitFindr
      The grader checks your code against what you claim here, so the file and
      function have to be real. -->
 
-**Branch rule:**
 
-**Where it lives:** `agent.py::run_agent`
+
+
 
 **How the query is parsed:** <!-- regex, string splitting, or asking the model — say which -->
 

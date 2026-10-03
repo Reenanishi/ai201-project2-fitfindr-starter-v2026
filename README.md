@@ -132,19 +132,39 @@ $ python app.py ask '...'
 
 **The three tools, tested one at a time**
 
-```
+
+
+```text
 $ python -c "from tools import search_listings; print(search_listings('graphic tee', max_price=30))"
 
-```
-
-```
-$ python -c "from tools import suggest_outfit; ..."
+[{'id': 'lst_002', 'title': 'Y2K Baby Tee — Butterfly Print', 'description': 'Super cute early 2000s baby tee with butterfly graphic. Fitted crop length. Tag says medium but fits like a small.', 'category': 'tops', 'style_tags': ['y2k', 'vintage', 'graphic tee', 'cottagecore'], 'size': 'S/M', 'condition': 'excellent', 'price': 18.0, 'colors': ['white', 'pink', 'purple'], 'brand': None, 'platform': 'depop'}, {'id': 'lst_006', 'title': 'Graphic Tee — 2003 Tour Bootleg Style', 'description': 'Vintage-style bootleg tee with faded graphic. Slightly boxy fit. 100% cotton, soft and worn-in.', 'category': 'tops', 'style_tags': ['graphic tee', 'vintage', 'grunge', 'streetwear', 'band tee'], 'size': 'L', 'condition': 'good', 'price': 24.0, 'colors': ['black'], 'brand': None, 'platform': 'depop'}]
 
 ```
 
 ```
-$ python -c "from tools import create_fit_card; ..."
+$ python -c "from tools import suggest_outfit; from utils.data_loader import get_example_wardrobe, load_listings; print(suggest_outfit(load_listings()[0], get_example_wardrobe()))"
 
+Here are two outfit suggestions using the vintage Levi's 501s and pieces from your existing wardrobe:
+
+### Outfit 1: Effortless Casual Streetwear
+This look leans into the classic, laid-back vibe of the 501s with comfortable, everyday basics.
+* Top: White ribbed tank top
+* Outerwear: Oversized grey crewneck sweatshirt
+* Shoes: Chunky white sneakers
+* Accessories: Black crossbody bag
+
+### Outfit 2: Edgy Denim-on-Denim
+Pairing the medium wash jeans with black outerwear creates a high-contrast, vintage-inspired streetwear look.
+* Top: Black cropped zip hoodie
+* Outerwear: Vintage black denim jacket
+* Shoes: Black combat boots
+* Accessories: Brown leather belt and black crossbody bag
+```
+
+```
+$ python -c "from tools import create_fit_card; from utils.data_loader import load_listings; print(create_fit_card('jeans and white sneakers', load_listings()[0]))"
+
+Nothing beats the effortless streetwear vibe of a crisp white sneaker paired with the ultimate classic denim. These vintage medium wash Levi’s 501s have that perfectly broken-in look and are ready for a new home. Grab this W30 L30 staple for just $38 over on my Depop before they’re gone! #vintage #denim
 ```
 
 ---

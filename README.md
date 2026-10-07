@@ -110,10 +110,10 @@ The user tells FitFindr what kind of clothing item they are looking for, FitFind
 
 
 
-**How the query is parsed:** <!-- regex, string splitting, or asking the model — say which -->
+**How the query is parsed:** `agent.py::parse_query` uses regular expressions to find the size and maximum price in the user's query. The remaining text is used as the item description.
 
-**What moves through the session:** <!-- which fields, in what order -->
 
+**What moves through the session:** The parsed query goes into `session["parsed"]`, the search results go into `session["search_results"]`, the first matching item goes into `session["selected_item"]`, the outfit suggestion goes into `session["outfit_suggestion"]`, and the final fit card goes into `session["fit_card"]`.
 ---
 
 ## Sample Run
@@ -126,13 +126,39 @@ The user tells FitFindr what kind of clothing item they are looking for, FitFind
 **One full query**
 
 ```
-$ python app.py ask '...'
+**One full query**
 
+```text
+$ python app.py ask 'vintage graphic tee under $30'
+
+Found: Y2K Baby Tee — Butterfly Print — $18.0 on depop
+
+Outfit: Here are two outfit ideas using the new Y2K butterfly baby tee and pieces from your existing wardrobe:
+
+**Outfit 1: Casual Streetwear (Y2K Daily)**
+* **Top:** Y2K Butterfly Baby Tee (New Item)
+* **Bottoms:** Baggy straight-leg jeans, dark wash
+* **Outerwear:** Black cropped zip hoodie (worn open or draped over the shoulders)
+* **Shoes:** Chunky white sneakers
+* **Accessories:** Black crossbody bag
+
+*Why it works:* This leans into the Y2K aesthetic of the baby tee by balancing the fitted crop top with loose, low-slung baggy denim. The black hoodie and white sneakers tie the monochrome elements of the look together while letting the pink and purple butterfly graphic pop.
+
+**Outfit 2: Elevated Casual (Soft & Edgy Contrast)**
+* **Top:** Y2K Butterfly Baby Tee (New Item)
+* **Bottoms:** Wide-leg khaki trousers
+* **Outerwear:** Vintage black denim jacket
+* **Shoes:** Black combat boots
+* **Accessories:** Brown leather belt, Black crossbody bag
+
+*Why it works:* Pairing the super-feminine, pastel butterfly tee with wide-leg utility trousers creates a cool high-low mix. Tucking the tee in with the brown leather belt defines the waist, and the black combat boots and vintage denim jacket add an effortless, slightly edgy contrast to the soft cottagecore/Y2K vibe.
+
+Fit card: Fluttered into my closet and I am obsessed with this Y2K butterfly babytee! 🦋✨ Listed on my Depop in a size S/M for just $18, it’s giving the ultimate soft-meets-edgy contrast when paired with baggy denim and combat boots. Go grab it before I change my mind and keep it for myself!
 ```
 
+
+
 **The three tools, tested one at a time**
-
-
 
 ```text
 $ python -c "from tools import search_listings; print(search_listings('graphic tee', max_price=30))"
@@ -180,15 +206,19 @@ Nothing beats the effortless streetwear vibe of a crisp white sneaker paired wit
 
 **Moment 1**
 
-- *What I asked for:*
-- *What came back:*
-- *What I changed:*
+- *What I asked for:* I asked AI for help building and testing `search_listings` so it would filter listings by description, size, and maximum price.
+
+- *What came back:* AI helped me identify problems with the filtering logic and showed me how to test both a normal search and a search that should return no matches.
+- *What I changed:* I fixed the filtering logic so matching listings are returned correctly and an impossible search returns an empty list `[]`.
+
 
 **Moment 2**
 
-- *What I asked for:*
-- *What came back:*
-- *What I changed:*
+- *What I asked for:* I asked AI why `create_fit_card` was giving me the same caption when I ran the test multiple times.
+
+- *What came back:*AI suggested checking the temperature and cache settings. I checked `config.py` and found that the temperature was `0.9` but caching was enabled.
+
+- *What I changed:* I tested the function again with `AI201_CACHE=0`. The captions changed between runs, which showed me that the repeated response was caused by the cache.
 
 <!-- ═══════════════════════ UNIT 4 — THE TEST ═══════════════════════
 

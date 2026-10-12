@@ -128,33 +128,71 @@ def run_agent(query: str, wardrobe: dict) -> dict:
     # 2. Parse the user's query and save it in the session.
     session["parsed"] = parse_query(session["query"])
 
+    trace.step(
+        "parse_query",
+        inputs=session["query"],
+        returned=session["parsed"],
+    )
+
     # 3. Read the parsed values back out of the session and search.
     session["search_results"] = call_tool("search_listings", {
         "description": session["parsed"]["description"],
         "size": session["parsed"]["size"],
         "max_price": session["parsed"]["max_price"],
     })
+    trace.step(
+        "search_listings (via MCP)",
+        inputs=session["parsed"],
+        returned=session["search_results"],
+    )
     # 4. THE BRANCH:
     # If search returned nothing, stop here.
     if not session["search_results"]:
         session["error"] = _nothing_found_message(
             session["parsed"]
         )
+        trace.step(
+            "empty_search_branch",
+            inputs=session["search_results"],
+            returned=session["error"],
+        )
+
         return session
 
     # 5. Choose the first result and save it in the session.
     session["selected_item"] = session["search_results"][0]
+    trace.step(
+        "select_item",
+        inputs=session["search_results"],
+        returned=session["selected_item"],
+    )
 
     # 6. Read the selected item and wardrobe back from the session.
     session["outfit_suggestion"] = suggest_outfit(
         session["selected_item"],
         session["wardrobe"],
     )
+    trace.step(
+        "suggest_outfit",
+        inputs={
+            "new_item": session["selected_item"],
+            "wardrobe": session["wardrobe"],
+        },
+        returned=session["outfit_suggestion"],
+    )
 
     # 7. Read the outfit and selected item back from the session.
     session["fit_card"] = create_fit_card(
         session["outfit_suggestion"],
         session["selected_item"],
+    )
+    trace.step(
+        "create_fit_card",
+        inputs={
+            "outfit": session["outfit_suggestion"],
+            "new_item": session["selected_item"],
+        },
+        returned=session["fit_card"],
     )
 
     # 8. Return the finished session.

@@ -125,8 +125,6 @@ The user tells FitFindr what kind of clothing item they are looking for, FitFind
 
 **One full query**
 
-```
-**One full query**
 
 ```text
 $ python app.py ask 'vintage graphic tee under $30'
@@ -216,7 +214,7 @@ Nothing beats the effortless streetwear vibe of a crisp white sneaker paired wit
 
 - *What I asked for:* I asked AI why `create_fit_card` was giving me the same caption when I ran the test multiple times.
 
-- *What came back:*AI suggested checking the temperature and cache settings. I checked `config.py` and found that the temperature was `0.9` but caching was enabled.
+- *What came back:* AI suggested checking the temperature and cache settings. I checked `config.py` and found that the temperature was `0.9` but caching was enabled.
 
 - *What I changed:* I tested the function again with `AI201_CACHE=0`. The captions changed between runs, which showed me that the repeated response was caused by the cache.
 
@@ -302,16 +300,51 @@ that produced it:
 **Happy path**
 
 ```
+$ python app.py ask 'vintage graphic tee under $30' --trace
+
+[1] parse_query
+      in:  vintage graphic tee under $30
+      out: dict with keys: description, size, max_price
+[2] search_listings (via MCP)
+      in:  dict with keys: description, size, max_price
+      out: 10 items: Y2K Baby Tee — Butterfly Print, Graphic Tee — 2003 Tour Bootleg Style, Vintage Band Tee — Faded Grey … +7 more
+[3] select_item
+      in:  10 items: Y2K Baby Tee — Butterfly Print, Graphic Tee — 2003 Tour Bootleg Style, Vintage Band Tee — Faded Grey … +7 more
+      out: Y2K Baby Tee — Butterfly Print ($18.0, depop)
+[4] suggest_outfit
+      in:  dict with keys: new_item, wardrobe
+      out: Here are two outfit ideas using the new Y2K butterfly baby tee and pieces from your existing wardrobe:  **Outf…
+[5] create_fit_card
+      in:  dict with keys: outfit, new_item
+      out: Fluttered into my closet and I am obsessed with this Y2K butterfly baby tee! 🦋✨ Listed on my Depop in a size S…
 
 ```
 
 **Empty search**
 
 ```
+$ python app.py ask 'designer ballgown size XXS under $5' --trace
+
+[1] parse_query
+      in:  designer ballgown size XXS under $5
+      out: dict with keys: description, size, max_price
+[2] search_listings (via MCP)
+      in:  dict with keys: description, size, max_price
+      out: [] (empty)
+[3] empty_search_branch
+      in:  [] (empty)
+      out: Nothing in the listings matched description 'designer ballgown', size XXS, under $5. Things to change: try bro…
+
+Nothing in the listings matched description 'designer ballgown', size XXS, under $5. Things to change: try broader search words; remove the size or try another size; raise the price limit above $5.
+
+0 model calls this session
 
 ```
 
-**On the MCP move:** <!-- what changed in your code, and whether anything
+**On the MCP move:** 
+I moved `search_listings` into `mcp_server.py` and updated `agent.py` to call it through MCP. After making the change, I tested it with a normal search and a search that had no matches. Both worked. FitFindr still found clothes and suggested outfits, and it stopped when nothing matched. I didn't notice any difference in the results.
+
+ <!-- what changed in your code, and whether anything
 behaved differently afterwards. If the rewire didn't work, say exactly where it
 broke — the error text and the last thing that worked. That earns the point in
 full. -->

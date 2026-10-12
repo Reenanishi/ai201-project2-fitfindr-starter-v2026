@@ -166,6 +166,12 @@ def run_agent(query: str, wardrobe: dict) -> dict:
         inputs=session["search_results"],
         returned=session["selected_item"],
     )
+    # Check that the selected item matches the search result.
+    assert (
+        session["selected_item"]["id"]
+        == session["search_results"][0]["id"]
+    ), "Selected item ID does not match the search result"
+
 
     # 6. Read the selected item and wardrobe back from the session.
     session["outfit_suggestion"] = suggest_outfit(

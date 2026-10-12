@@ -218,6 +218,12 @@ Nothing beats the effortless streetwear vibe of a crisp white sneaker paired wit
 
 - *What I changed:* I tested the function again with `AI201_CACHE=0`. The captions changed between runs, which showed me that the repeated response was caused by the cache.
 
+**Moment 3 (Unit 4)**
+
+- **What I asked for:** I asked ChatGPT and Claude for help testing FitFindr because I wasn't sure how to check everything.
+- **What came back:** They helped me understand the test results and how to check if the selected item ID matched the search result.
+- **What I changed:** I added an `assert` check in `agent.py` and ran the tests again. Everything still worked after the change.
+
 <!-- ═══════════════════════ UNIT 4 — THE TEST ═══════════════════════
 
      Don't fill these in during unit 3.
